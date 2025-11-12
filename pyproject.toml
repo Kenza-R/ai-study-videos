@@ -1,0 +1,14 @@
+[project]
+name = "gemini-video-generation-test"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "click>=8.3.0",
+    "google-cloud-texttospeech>=2.33.0",
+    "google-genai>=1.48.0",
+    "pubmed-parser>=0.5.1",
+    "pydub>=0.25.1",
+    "runwayml>=3.21.0",
+]

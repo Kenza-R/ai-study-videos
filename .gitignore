@@ -1,0 +1,18 @@
+tmp
+*.mp4
+.claude
+.mcp.json
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Pipeline completion markers
+.videos_complete
+.captions_complete
