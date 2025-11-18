@@ -34,3 +34,6 @@ db.sqlite3
 # Archive directory created by cleanup
 archive/
 .venv
+
+# Django static files (collected by collectstatic)
+staticfiles/
