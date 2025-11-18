@@ -70,6 +70,7 @@ DATABASES = {
 
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+# Use CompressedStaticFilesStorage (not Manifest) for simpler deployment
 STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
 # Media files for generated outputs (videos, audio, metadata)
