@@ -1,28 +1,157 @@
-{% extends "base.html" %}
-
-{% block title %}Upload Paper - Hidden Hill{% endblock %}
-
-{% block header_title %}Generate AI Video from Paper{% endblock %}
-
-{% block content %}
-  <p>Upload a research paper to generate an AI video. Provide either a PubMed ID or upload a PDF file.</p>
-
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <div class="form-group">
-      <label for="{{ form.paper_id.id_for_label }}">{{ form.paper_id.label }}</label>
-      {{ form.paper_id }}
-      {% if form.paper_id.help_text %}
-        <p class="help-text">{{ form.paper_id.help_text|safe }}</p>
-      {% endif %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Paper - Hidden Hill</title>
+    <link rel="stylesheet" href="{% static 'web/css/upload.css' %}">
+</head>
+<body>
+    <!-- Background Orbs -->
+    <div class="upload-background">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
     </div>
-    <div class="form-group">
-      <label for="{{ form.file.id_for_label }}">{{ form.file.label }}</label>
-      {{ form.file }}
-      {% if form.file.help_text %}
-        <p class="help-text">{{ form.file.help_text|safe }}</p>
-      {% endif %}
+
+    <!-- DNA Loading Animation (shared with base) -->
+    <div id="loading-screen" class="loading-container" style="display: none;">
+        <div class="dna-strand">
+            <div class="dna-dot"></div>
+            <div class="dna-dot"></div>
+            <div class="dna-dot"></div>
+            <div class="dna-dot"></div>
+            <div class="dna-dot"></div>
+            <div class="dna-dot"></div>
+            <div class="dna-dot"></div>
+            <div class="dna-dot"></div>
+            <div class="dna-dot"></div>
+            <div class="dna-dot"></div>
+        </div>
+        <div class="loading-text">Generating...</div>
     </div>
-    <button type="submit" class="btn-primary">Start Generation</button>
-  </form>
-{% endblock %}
+
+    <div class="upload-wrapper">
+        <!-- Header Navigation -->
+        <header>
+            <h1>Hidden Hill</h1>
+            <nav>
+                {% if user.is_authenticated %}
+                    <span class="nav-welcome">Welcome, <strong>{{ user.username }}</strong></span>
+                    <a href="/">Home</a>
+                    <a href="/upload/">Upload Paper</a>
+                    <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit">Logout</button>
+                    </form>
+                {% else %}
+                    <a href="/">Home</a>
+                    <a href="{% url 'login' %}">Login</a>
+                    <a href="{% url 'register' %}">Register</a>
+                {% endif %}
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main>
+            <div class="upload-container">
+                <!-- Header -->
+                <div class="upload-header">
+                    <h2>Transform Your Research</h2>
+                    <p>Upload a research paper and let AI create an engaging video summary for you in seconds.</p>
+                </div>
+
+                <!-- Messages -->
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <!-- Form -->
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <!-- PubMed ID Input -->
+                    <div class="form-group">
+                        <label for="{{ form.paper_id.id_for_label }}">{{ form.paper_id.label }}</label>
+                        {{ form.paper_id }}
+                        {% if form.paper_id.help_text %}
+                            <p class="help-text">{{ form.paper_id.help_text|safe }}</p>
+                        {% endif %}
+                        {% if form.paper_id.errors %}
+                            <div class="alert alert-error">
+                                {% for error in form.paper_id.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Divider -->
+                    <div class="form-divider">
+                        <span>OR</span>
+                    </div>
+
+                    <!-- File Upload -->
+                    <div class="form-group">
+                        <label for="{{ form.file.id_for_label }}">{{ form.file.label }}</label>
+                        <div class="file-upload-area">
+                            <span class="upload-icon">📄</span>
+                            <p>Drag & drop your PDF here</p>
+                            <small>or click to browse</small>
+                            {{ form.file }}
+                        </div>
+                        <div class="file-name"></div>
+                        {% if form.file.help_text %}
+                            <p class="help-text">{{ form.file.help_text|safe }}</p>
+                        {% endif %}
+                        {% if form.file.errors %}
+                            <div class="alert alert-error">
+                                {% for error in form.file.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-primary">Generate Video</button>
+                        <a href="/" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+
+                <!-- Info Box -->
+                <div style="margin-top: 40px; padding: 20px; background: rgba(232, 240, 247, 0.5); border-radius: 12px; border-left: 4px solid #4a7ba7;">
+                    <p style="color: #1e3a5f; font-size: 14px; line-height: 1.6; margin: 0;">
+                        <strong>💡 Tip:</strong> You can provide either a PubMed ID (e.g., 12345678) to automatically fetch the paper, 
+                        or upload a PDF file directly. Both options will generate a stunning AI-powered video of your research.
+                    </p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <link rel="stylesheet" href="{% static 'web/css/style.css' %}">
+    <script src="{% static 'web/js/upload.js' %}"></script>
+    <script>
+        // Show loading screen on form submission
+        document.addEventListener('DOMContentLoaded', function() {
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                form.addEventListener('submit', function() {
+                    if (this.method.toUpperCase() !== 'POST' || this.action.includes('logout')) {
+                        return;
+                    }
+                    document.getElementById('loading-screen').style.display = 'flex';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
