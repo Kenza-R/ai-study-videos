@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Paper - Hidden Hill</title>
-    <link rel="stylesheet" href="{% static 'web/css/upload.css' %}">
+    <link rel="stylesheet" href="{% static 'web/css/upload.css' %}?v=2024.11.26">
 </head>
 <body>
     <!-- Background Orbs -->
@@ -32,27 +32,25 @@
         <div class="loading-text">Generating...</div>
     </div>
 
-    <div class="upload-wrapper">
-        <!-- Header Navigation -->
-        <header>
-            <h1>Hidden Hill</h1>
-            <nav>
-                {% if user.is_authenticated %}
-                    <span class="nav-welcome">Welcome, <strong>{{ user.username }}</strong></span>
-                    <a href="/">Home</a>
-                    <a href="/upload/">Upload Paper</a>
-                    <form method="post" action="{% url 'logout' %}" style="display: inline;">
-                        {% csrf_token %}
-                        <button type="submit">Logout</button>
-                    </form>
-                {% else %}
-                    <a href="/">Home</a>
-                    <a href="{% url 'login' %}">Login</a>
-                    <a href="{% url 'register' %}">Register</a>
-                {% endif %}
-            </nav>
-        </header>
+    <!-- Header Navigation -->
+    <header>
+        <h1>Hidden Hill</h1>
+        <nav>
+            {% if user.is_authenticated %}
+                <a href="/">HOME</a>
+                <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn">LOGOUT</button>
+                </form>
+            {% else %}
+                <a href="/">Home</a>
+                <a href="{% url 'login' %}">Login</a>
+                <a href="{% url 'register' %}">Register</a>
+            {% endif %}
+        </nav>
+    </header>
 
+    <div class="upload-wrapper">
         <!-- Main Content -->
         <main>
             <div class="upload-container">
